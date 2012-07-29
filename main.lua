@@ -60,10 +60,12 @@ local gameEvent = ""
 -- check if simulator or iDevice
 local isSimulator = "simulator" == system.getInfo("environment")
 
+-- main function to handle scenes
 function main()
     mainMenu()
 end
 
+-- starts the main menu
 function mainMenu()
     menuScreenGroup = display.newGroup()
     
@@ -83,9 +85,10 @@ function mainMenu()
     
 end
 
+-- loads the game
 function loadGame(event)
     if event.target.name == "playbutton" then
-        transition.to(menuScreenGroup,{time = 0, alpha = 0, onComplete = addGameScreen})
+        transition.to(menuScreenGroup,{time = 500, alpha = 0, onComplete = addGameScreen})
         playBtn:removeEventListener( "tap", loadGame )
     end
 end
