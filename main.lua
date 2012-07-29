@@ -63,12 +63,12 @@ local gameEvent = ""
 -- check if simulator or iDevice
 local isSimulator = "simulator" == system.getInfo("environment")
 
--- main function to handle scenes
+-- starts the main menu
 function main()
     mainMenu()
 end
 
--- starts the main menu
+-- function to load the main menu on boot
 function mainMenu()
     menuScreenGroup = display.newGroup()
 
@@ -97,6 +97,26 @@ function mainMenu()
 
 end
 
+-- help menu function
+function helpMenu()
+    helpScreenGroup = display.newGroup()
+
+    hmScreen = display.newImage("img/hmScreen.png",0,0,true)
+    hmScreen.x = _W
+    hmScreen.y = _H
+    
+    helpbackBtn = display.newImage("img/helpbackbtn.png")
+    helpbackBtn:setReferencePoint( display.CenterReferencePoint )
+    helpbackBtn.x = _W; helpbackBtn.y = _H + 100
+    helpbackBtn.name = "helpbackbutton"
+    
+    helpScreenGroup:insert( hmScreen )
+    helpScreenGroup:insert( helpbackBtn )       
+    helpScreenGroup:setReferencePoint( display.CenterReferencePoint )
+    
+    helpbackBtn:addEventListener("tap", backtoMain)
+end
+
 -- loads the game
 function loadGame(event)
     if event.target.name == "playbutton" then
@@ -106,12 +126,22 @@ function loadGame(event)
     end
 end
 
+-- loads the help menu
 function helpGame(event)
     if event.target.name == "helpbutton" then
-        transition.to(menuScreenGroup,{time = 750, alpha = 0, xScale = 0, yScale = 0, rotation = 720, onComplete = addGameScreen})
+        transition.to(menuScreenGroup,{time = 750, alpha = 0, xScale = 0.25, yScale = 0.25, rotation = 720, onComplete = helpMenu})
         playBtn:removeEventListener( "tap", loadGame )
         helpBtn:removeEventListener( "tap", helpGame )
     end
 end
+
+-- back to main menu after help menu
+function backtoMain(event)
+    if event.target.name == "helpbackbutton" then
+        transition.to(helpScreenGroup,{time = 750, alpha = 0, xScale = 2.5, yScale = 2.5, rotation = 720, onComplete = main})
+        helpbackBtn:removeEventListener( "tap", backtoMain )
+    end
+end
+
 
 main()
