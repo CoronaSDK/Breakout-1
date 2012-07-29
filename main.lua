@@ -62,7 +62,6 @@ local isSimulator = "simulator" == system.getInfo("environment")
 
 function main()
     mainMenu()
-
 end
 
 function mainMenu()
@@ -72,7 +71,7 @@ function mainMenu()
     mmScreen.x = _W
     mmScreen.y = _H
     
-    playBtn = display.newImage("img/playBtn.png")
+    playBtn = display.newImage("img/playbtn.png")
     playBtn:setReferencePoint( display.CenterReferencePoint )
     playBtn.x = _W; playBtn.y = _H + 50
     playBtn.name = "playbutton"
@@ -90,3 +89,5 @@ function loadGame(event)
         playBtn:removeEventListener( "tap", loadGame )
     end
 end
+
+main()
