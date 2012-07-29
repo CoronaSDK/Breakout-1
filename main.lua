@@ -1,4 +1,4 @@
--- Crafted by @CraftyDeano
+
 
 -- Crafted by @CraftyDeano
 
@@ -145,3 +145,33 @@ end
 
 
 main()
+
+function addGameScreen()
+    background = display.newImage("img/bg.png",0,0,true)
+    background.x = _W
+    background.y = _H
+    
+    paddle = display.newImage("img/paddle.png")
+    paddle.x = 240
+    paddle.y = 300
+    paddle.name = "paddle"
+    
+    ball = display.newImage ("img/ball.png")
+    ball.x = 240
+    ball.y = 290
+    ball.name = "ball"
+    
+    scoreText = display.newText("Score:",5,2,"Arial",14)
+    scoreText:setTextColor ( 255, 255, 255, 255 )
+    
+    scoreNum = display.newText("0", 54,2,"Arial",14)
+    scoreNum:setTextColor( 255, 255, 255, 255 )
+    
+    levelText = display.newText("Level:", 420,2,"Arial",14)
+    levelText:setTextColor( 255, 255, 255, 255 )
+    
+    levelNum = display.newText("1", 460, 2, "Arial", 14)
+    levelNum:setTextColor( 255, 255, 255, 255 )
+    
+    gameLevel1()
+end
