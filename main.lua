@@ -1,4 +1,4 @@
-
+CiderRunMode = {};CiderRunMode.runmode = true;CiderRunMode.assertImage = true;require "CiderDebugger";
 
 -- Crafted by @CraftyDeano
 
@@ -175,3 +175,45 @@ function addGameScreen()
     
     gameLevel1()
 end
+
+function gameLevel1()
+    currentLevel = 1 -- current level number
+    bricks:toFront() -- moves bricks to foreground
+    
+    local numOfRows = 4
+    local numOfColumns = 4
+    local brickPlacement = {x = (_W) - (brickWidth * numOfColumns) / 2 + 20, y = 50}
+    
+    for row = 0, numOfRows - 1 do
+        for column = 0, numOfColumns -1 do
+            local brick = display.newImage("img/brick.png")
+            brick.name = "brick"
+            brick.x = brickPlacement.x + (column * brickWidth)
+            brick.y = brickPlacement.y + (row * brickHeight)
+            physics.addBody(brick, "static", {density = 1, friction = 0, bounce = 0})
+            bricks.insert(bricks, brick)
+            
+        end
+    end
+end
+
+function gameLevel2()
+    currentLevel = 2 -- current level number
+    bricks:toFront() -- moves bricks to foreground
+    
+    local numOfRows = 4
+    local numOfColumns = 4
+    local brickPlacement = {x = (_W) - (brickWidth * numOfColumns) / 2 + 20, y = 50}
+    
+    for row = 0, numOfRows - 1 do
+        for column = 0, numOfColumns -1 do
+            local brick = display.newImage("img/brick.png")
+            brick.name = "brick"
+            brick.x = brickPlacement.x + (column * brickWidth)
+            brick.y = brickPlacement.y + (row * brickHeight)
+            physics.addBody(brick, "static", {density = 1, friction = 0, bounce = 0})
+            bricks.insert(bricks, brick)
+            
+        end
+    end
+end    
