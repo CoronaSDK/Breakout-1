@@ -68,7 +68,7 @@ end
 -- starts the main menu
 function mainMenu()
     menuScreenGroup = display.newGroup()
-    
+
     mmScreen = display.newImage("img/mmScreen.png",0,0,true)
     mmScreen.x = _W
     mmScreen.y = _H
@@ -80,6 +80,8 @@ function mainMenu()
     
     menuScreenGroup:insert( mmScreen )
     menuScreenGroup:insert( playBtn )
+    menuScreenGroup:setReferencePoint( display.CenterReferencePoint )
+
     
     playBtn:addEventListener("tap", loadGame)
     
@@ -88,7 +90,7 @@ end
 -- loads the game
 function loadGame(event)
     if event.target.name == "playbutton" then
-        transition.to(menuScreenGroup,{time = 500, alpha = 0, onComplete = addGameScreen})
+        transition.to(menuScreenGroup,{time = 750, alpha = 0, xScale = 2.5, yScale = 2.5, rotation = 720, onComplete = addGameScreen})
         playBtn:removeEventListener( "tap", loadGame )
     end
 end
