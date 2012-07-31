@@ -193,13 +193,15 @@ function dragPaddle(event)
     end
 end
 
-function movePaddle()
-    paddle.x = display.contentCenterX - (display.contentCenterX * (event.yGravity*3))
-    if((paddle.x - paddle.width * 0.5) < 0) then
-        paddle.x = paddle.width *0.5
-    elseif((paddle.x + paddle.width * 0.5 ) > display.contentWidth) then
-        paddle.x = display.contentWidth - paddle.width * 0.5
-    end
+function movePaddle(event)
+
+	paddle.x = display.contentCenterX - (display.contentCenterX * (event.yGravity*3))
+		
+	if((paddle.x - paddle.width * 0.5) < 0) then
+		paddle.x = paddle.width * 0.5
+	elseif((paddle.x + paddle.width * 0.5) > display.contentWidth) then
+		paddle.x = display.contentWidth - paddle.width * 0.5
+	end
 end
 
 function bounce()
@@ -262,6 +264,22 @@ function gameLevel2()
     end
 end    
 
+function gameListeners(event)
+    if event == "add" then
+        Runtime:addEventListener( "accelerometer", movePaddle )
+        Runtime:addEventListener( "enterFrame", updateBall )
+        paddle:addEventListener( "collision", bounce )
+        ball:addEventListener("collision", removeBrick)
+        paddle:addEventListener( "touch", dragPaddle )
+    elseif event == "remove" then
+        Runtime:removeEventListener( "accelerometer", movePaddle )
+        Runtime:removeEventListener( "enterFrame", updateBall )
+        paddle:removeEventListener( "collision", bounce )
+        ball:removeEventListener("collision", removeBrick)
+        paddle:removeEventListener( "touch", dragPaddle )   
+    end
+end
+
 function removeBrick(event)
     if event.other.name == "brick" and ball.x + ball.width * 0.5 < event.other.x + event.other.width * 0.5 then
         vx = -vx
@@ -303,23 +321,36 @@ function updateBall()
 end
 
 function changeLevel1()
-    bricks:removeSelf( )
-    bricks.numChildren = 0
-    bricks = display.newGroup()
-    
-    alertBox:removeEventListener( "tap", restart )
-    alertDisplayGroup:removeSelf()
-    alertDisplayGroup = nil
-    
-    ball.x = (display.contentWidth * 0.5) - (ball.width * 0.5)
-    ball.y = (paddle.y - paddle.height) - (ball.height * 0.5) - 2
-    
-    paddle.x = display.contentWidth * 0.5
-    
-    gameLevel1()
-    
-    background:addEventListener("tap", startGame)
+
+	-- Clear Level Bricks 
+	
+	bricks:removeSelf()
+	
+	bricks.numChildren = 0
+	bricks = display.newGroup()
+
+	-- Remove Alert 
+	
+	alertBox:removeEventListener("tap", restart)
+	alertDisplayGroup:removeSelf()
+	alertDisplayGroup = nil
+	
+	-- Reset Ball and Paddle position 
+	
+	ball.x = (display.contentWidth * 0.5) - (ball.width * 0.5)
+	ball.y = (paddle.y - paddle.height) - (ball.height * 0.5) -2
+	
+	paddle.x = display.contentWidth * 0.5
+	
+	-- Redraw Bricks 
+	
+	gameLevel1()	
+	
+	-- Start
+	
+	background:addEventListener("tap", startGame)
 end
+
 
 function changeLevel2()
     bricks:removeSelf( )
@@ -340,70 +371,58 @@ function changeLevel2()
     background:addEventListener("tap", startGame)
 end
 
-function gameListeners(event)
-    if event == "add" then
-        Runtime:addEventListener( "accelerometer", movePaddle )
-        Runtime:addEventListener( "enterFrame", updateBall )
-        paddle:addEventListener( "collision", bounce )
-        ball:addEventListener("collision", removeBrick)
-        paddle:addEventListener( "touch", dragPaddle )
-    elseif event == "remove" then
-        Runtime:removeEventListener( "accelerometer", movePaddle )
-        Runtime:removeEventListener( "enterFrame", updateBall )
-        paddle:removeEventListener( "collision", bounce )
-        ball:removeEventListener("collision", removeBrick)
-        paddle:removeEventListener( "touch", dragPaddle )   
-    end
-end
-
-
 -- alert screen for game end
 function alertScreen(title, message)
-    
-    alertBox = display.newImage("img/alertBox.png")
-    alertBox.x = 240
-    alertBox.y = 160
-    
-    transition.from(alertBox, {time = 500, xScale = 0.5, yScale = 0.5, transition = easing.outExpo})
-    
-    conditionDisplay = display.newText(title,0,0,"Arial",38)
-    conditionDisplay:setTextColor( 0, 0, 0, 255 ) 
-    conditionDisplay.xScale = 0.5
-    conditionDisplay.yScale = 0.5
-    conditionDisplay:setReferencePoint( display.CenterReferencePoint )
-    conditionDisplay.x = display.contentCenterX
-    conditionDisplay.y = display.contentCenterY - 15
-    
-    messageText = display.newText(message,0,0,"Arial",24)
-    messageText:setTextColor( 0, 0, 0, 255 ) 
-    messageText.xScale = 0.5
-    messageText.yScale = 0.5
-    messageText:setReferencePoint( display.CenterReferencePoint )
-    messageText.x = display.contentCenterX
-    messageText.y = display.contentCenterY + 15
-    
-    alertDisplayGroup = display.newGroup()
-    alertDisplayGroup:insert(alertBox)
-    alertDisplayGroup:insert(conditionDisplay)
-    alertDisplayGroup:insert(messageText)
-    alertBox:addEventListener("tap", restart)
-    gameListeners("remove")
+	
+	gameListeners("remove")
+	alertBox = display.newImage("img/alertBox.png")
+	alertBox:addEventListener("tap", restart)
+	alertBox.x = 240; alertBox.y = 160
+	transition.from(alertBox, {time = 500, xScale = 0.5, yScale = 0.5, transition = easing.outExpo})
+	
+	conditionDisplay = display.newText(title, 0, 0, "Arial", 38)
+	conditionDisplay:setTextColor(0,0,0,255)
+	conditionDisplay.xScale = 0.5
+	conditionDisplay.yScale = 0.5
+	conditionDisplay:setReferencePoint(display.CenterReferencePoint)
+	conditionDisplay.x = display.contentCenterX
+	conditionDisplay.y = display.contentCenterY - 15
+	
+	messageText = display.newText(message, 0, 0, "Arial", 24)
+	messageText:setTextColor(0
+	,0,0,255)
+	messageText.xScale = 0.5
+	messageText.yScale = 0.5
+	messageText:setReferencePoint(display.CenterReferencePoint)
+	messageText.x = display.contentCenterX
+	messageText.y = display.contentCenterY + 15
+
+	alertDisplayGroup = display.newGroup()
+	alertDisplayGroup:insert(alertBox)
+	alertDisplayGroup:insert(conditionDisplay)
+	alertDisplayGroup:insert(messageText)
+	
+	
+	alertBox:addEventListener("tap", restart)
 end
 
 function restart()
-    if gameEvent == "win" and currentLevel == 1 then
-        currentLevel = currentLevel + 1
-        changeLevel2()
-        levelNum.text = tostring( currentLevel )
-    elseif gameEvent == "lose" and currentLevel == 1 then
-        score = 0
-        scoreNum.text = "0"
-        changeLevel1()
-    elseif gameEvent == "lose" and currentLevel == 2 then
-        score = 0
-        scoreNum.text = "0"
-        changeLevel2()
-    elseif gameEvent == "completed" then
-        alertbBox:removeEventListener( "tap", restart )
-    end
+	if gameEvent == "win" and currentLevel == 1 then
+		currentLevel = currentLevel + 1
+		changeLevel2()--next level
+		levelNum.text = tostring(currentLevel)
+	elseif gameEvent == "win" and currentLevel == 2 then	
+		alertScreen("  Game Over", "  Congratulations!")
+		gameEvent = "completed"
+	elseif gameEvent == "lose" and currentLevel == 1 then
+		score = 0
+		scoreNum.text = "0"
+		changeLevel1()--same level
+	elseif gameEvent == "lose" and currentLevel == 2 then
+		score = 0
+		scoreNum.text = "0"
+		changeLevel2()--same level
+	elseif gameEvent == "completed" then
+		alertBox:removeEventListener("tap", restart)
+	end
 end
