@@ -58,6 +58,7 @@ local vx = 3
 local vy = -3
 local gameEvent = ""
 
+local pingSound = media.newEventSound("sound/ping.m4a")
 -- check if simulator or iDevice
 local isSimulator = "simulator" == system.getInfo("environment")
 
@@ -247,8 +248,8 @@ function gameLevel2()
     currentLevel = 2 -- current level number
     bricks:toFront() -- moves bricks to foreground
     
-    local numOfRows = 4
-    local numOfColumns = 4
+    local numOfRows = 5
+    local numOfColumns = 5
     local brickPlacement = {x = (_W) - (brickWidth * numOfColumns) / 2 + 20, y = 50}
     
     for row = 0, numOfRows - 1 do
@@ -292,7 +293,7 @@ function removeBrick(event)
         event.other:removeSelf()
         event.other = nil
         bricks.numChildren = bricks.numChildren -1
-        
+        media.playEventSound(pingSound)
         score = score +1
         scoreNum.text = score * scoreIncrease
         scoreNum:setReferencePoint( display.CenterLeftReferencePoint )
@@ -316,12 +317,14 @@ function updateBall()
     end
     
     if ball.y + ball.height > paddle.y + paddle.height then
-        alertScreen("LOSER!", "Play Again?") gameEvent = "Lose"
+        alertScreen("LOSER!", "Play Again?") gameEvent = "lose"
     end
 end
 
 function changeLevel1()
-
+	alertBox:removeEventListener("tap", restart)
+    	alertDisplayGroup:removeSelf()
+        alertDisplayGroup = nil
 	-- Clear Level Bricks 
 	
 	bricks:removeSelf()
@@ -329,12 +332,6 @@ function changeLevel1()
 	bricks.numChildren = 0
 	bricks = display.newGroup()
 
-	-- Remove Alert 
-	
-	alertBox:removeEventListener("tap", restart)
-	alertDisplayGroup:removeSelf()
-	alertDisplayGroup = nil
-	
 	-- Reset Ball and Paddle position 
 	
 	ball.x = (display.contentWidth * 0.5) - (ball.width * 0.5)
